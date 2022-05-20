@@ -1,0 +1,58 @@
+<!-- Add action button -->
+<div class="editor-bottom--add" (click)="openEditor()" *ngIf="!showEditor">
+    <mat-icon>add</mat-icon>
+</div>
+
+<ng-container *ngIf="showEditor">
+    <!-- Editor background / wrapper-->
+    <div class="editor-bottom" #editorOverlay></div>
+
+    <!-- Real editor -->
+    <div class="editor-bottom--container" [class.time-editor]="showTimeEditor || showDatepicker">
+        <!-- Input -->
+        <form [formGroup]="form">
+            <div class="editor-bottom--name" [class.editor-bottom--name-error]="nameError">
+                <input type="text" placeholder="Eintrag hinzufügen" formControlName="name" (keyup.enter)="addOrEdit()" #editorInput autocomplete="off" (click)="closeTimeDate()">
+                <mat-icon (click)="addOrEdit()" class="submit">send</mat-icon>
+            </div>
+
+            <!-- Options -->
+            <div class="editor-bottom--options">
+                <div class="editor-bottom--options-times">
+
+                    <!-- Datepicker -->
+                    <div class="editor-bottom--time date" [class.editor-bottom--time-error]="dateError">
+                        <div class="editor-bottom--time-element" (click)="datepicker.open(); openDatepicker()">
+                            <mat-icon>calendar_today</mat-icon>
+                            <span>{{ displayDate }}</span>
+                            <input type="text" matInput [matDatepicker]="datepicker" formControlName="date" [style.width]="dateInputWidth" (dateChange)="onDateChange($event.value)">
+                            <mat-datepicker #datepicker [calendarHeaderComponent]="datepickerHeader" startView="month"  (closed)="closeDatepicker()"></mat-datepicker>       
+                        </div>  
+                        <mat-icon *ngIf="showRemoveDate" (click)="removeDate()">close</mat-icon>
+                    </div>
+                    
+                    <!-- Timepicker -->
+                    <div class="editor-bottom--time" [class.editor-bottom--time-error]="timeError">
+                        <mat-icon>schedule</mat-icon>
+                        <span>{{ displayTime }}</span>
+                        <mat-icon *ngIf="showRemoveTime" (click)="removeTime()">close</mat-icon>
+                        
+                        <input type="number" [ngxTimepicker]="timeEditor" [format]="24" readonly [style.width]="timeInputWidth">
+                        <ngx-material-timepicker #timeEditor [minutesGap]="5" [disableAnimation]="true" [defaultTime]="'00:00'" (timeChanged)="timeChanged($event)" (opened)="openTimepicker()" (closed)="showTimeEditor = false"></ngx-material-timepicker>
+                    </div>
+
+                    <div class="editor-bottom--time collab">
+                        <mat-icon *ngIf="showCollab" (click)="toggleCollab()">people</mat-icon>
+                        <mat-icon *ngIf="!showCollab" (click)="toggleCollab()">person</mat-icon>
+                    </div>
+                </div>
+
+                <!-- Sort of entry -->
+                <mat-select [(value)]="entryType" *ngIf="showSelection">
+                    <mat-option [value]="2" (click)="focusEditorInput()">Aufgabe</mat-option>
+                    <mat-option [value]="1" (click)="focusEditorInput()">Termin</mat-option>
+                </mat-select>
+            </div>
+        </form>
+    </div>
+</ng-container>

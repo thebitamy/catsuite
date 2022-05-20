@@ -1,0 +1,47 @@
+<div class="calendar-header">
+    <!-- Workaround for adding today button to datepicker -->
+    <div class="calendar-header--footer-container">
+        <div class="calendar-header--footer" #datepickerFooter>
+            <button mat-raised-button class="action" (click)="today()">
+                Heute
+            </button>
+        </div>
+    </div>
+    
+    <!-- Headline -->
+    <div class="calendar-header--headline">      
+        <!-- Current or selected month -->
+        <div class="calendar-header--month" (click)="datepicker.open()">
+            <div class="calendar-header--month--label">
+                <h1 class="action" (click)="datepicker.open()">
+                    <span>{{ selectedMonth.display }}</span>
+                    <mat-icon *ngIf="showDatepicker">keyboard_arrow_down</mat-icon>
+                    <mat-icon *ngIf="!showDatepicker">chevron_left</mat-icon>
+                </h1>
+
+                <!-- Hidden datepicker input -->
+                <!-- Note: Input is required for datepicker from angular material -->
+                <mat-datepicker #datepicker [calendarHeaderComponent]="datepickerHeader" startView="month" (opened)="onDatepickerOpen()" (closed)="showDatepicker = false"></mat-datepicker>
+                <input type="text" matInput [matDatepicker]="datepicker" (dateChange)="onDateChange($event)" [value]="selectedDate">
+            </div>
+        </div>
+
+        <!-- Reset Icon -->
+        <!-- <button class="default" [disabled]="resetDateDisabled" (click)="today()">
+            <mat-icon [class.disabled]="resetDateDisabled">undo</mat-icon>
+        </button> -->
+        
+        <!-- Upcoming Icon -->
+        <button class="default" (click)="navigateToUpcoming()">
+            <mat-icon>upcoming</mat-icon>
+        </button>
+    </div>
+
+    <!-- Days -->
+    <div class="calendar-header--days" (scroll)="daysOnScroll()">
+        <div class="calendar-header--days-single" [class.past]="day.past" [class.selected]="selectedDay === day.number" *ngFor="let day of daysOfSelectedMonth" (click)="dayDateChange(day)" #days>
+            <span>{{ day.day }}</span>
+            <span>{{ day.number }}</span>
+        </div>
+    </div>
+</div>

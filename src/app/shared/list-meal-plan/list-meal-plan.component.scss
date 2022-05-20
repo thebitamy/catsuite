@@ -1,0 +1,41 @@
+.meal-plan {
+    margin-top: 30px;
+
+    &--headline {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        position: relative;
+
+        h3.date-hr:after {
+            content: "";
+            position: absolute;
+            border-top: 1px solid var(--white-transparent-shadow);
+            top: 25px;
+            width: 100%;
+            margin-left: 10px;                
+        }
+    }
+
+    &--container {
+        display: flex;
+        margin-top: 10px;
+
+        div {
+            height: 160px;
+            width: calc(50% - 5px);
+            background: var(--black-transparent-quarter);
+            border-radius: 10px;
+        }
+
+        div + div {
+            margin-left: 10px;
+        }
+
+        &-none {
+            display: flex; 
+            align-items: center;
+            justify-content: center;
+        }
+    }
+}

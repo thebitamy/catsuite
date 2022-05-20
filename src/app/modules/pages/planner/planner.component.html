@@ -1,0 +1,57 @@
+<div class="planner">
+    <!-- Calendar header -->
+    <app-calendar-header (pickedDate)="onDateChange($event)" (actualDate)="actualDate = $event"></app-calendar-header>
+
+    <!-- Meal plan -->
+    <div class="planner--category">
+        <div class="planner--category-headline">
+            <!-- Headline -->
+            <h3>Essensplan</h3>
+
+            <!-- Headline icons -->
+            <mat-icon *ngIf="showMealPlan" (click)="toggleMealPlan()">expand_more</mat-icon>
+            <mat-icon *ngIf="!showMealPlan" (click)="toggleMealPlan()">chevron_left</mat-icon>
+        </div>
+
+        <ng-container *ngIf="showMealPlan">
+            <div class="planner--meals">
+                <!-- Lunch -->
+                <div *ngIf="mealPlan?.lunch">
+                    {{ mealPlan.lunch?.name }}
+                </div>
+
+                <!-- No lunch planned yet -->
+                <div *ngIf="!mealPlan?.lunch" class="planner--meals-none" (click)="addMeal()">
+                    <mat-icon>add</mat-icon>
+                </div>
+
+                <!-- Dinner -->
+                <div *ngIf="mealPlan?.dinner">
+                    {{ mealPlan.dinner?.name }}
+                </div> 
+
+                <!-- No dinner planned yet -->
+                <div *ngIf="!mealPlan?.dinner" class="planner--meals-none" (click)="addMeal()">
+                    <mat-icon>add</mat-icon>
+                </div>
+            </div>
+        </ng-container>
+    </div>
+
+    <!-- Appointments -->
+    <div class="planner--category">
+        <app-list [list]="appointments" [headline]="'Termine'" [localStorageName]="'showAllAppointments'" [listType]="entryTypeEnum.Appointment" [sort]="false"
+                  (openItem)="openAppointment($event)" (swipedItem)="deleteAppointment($event)" (multiaction)="multiactionAppointment($event)">
+        </app-list>
+    </div>
+
+    <!-- Todos -->
+    <div class="planner--category">
+        <app-list [list]="todos" [headline]="'Aufgaben'" [localStorageName]="'showAllTodos'" [listType]="entryTypeEnum.Todo"
+                  (openItem)="openTodo($event)" (checkedItem)="markTodo($event)" (changedOrder)="changeTodosOrder($event)" (swipedItem)="deleteTodo($event)" (multiaction)="multiactionTodo($event)">
+        </app-list>
+    </div>
+
+    <!-- Editor -->
+    <app-editor-bottom [(show)]="showEditor" (submitEntry)="submitEntry($event)" [date]="selectedDate"></app-editor-bottom>
+</div>

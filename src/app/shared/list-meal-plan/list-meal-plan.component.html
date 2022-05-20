@@ -1,0 +1,29 @@
+
+<div *ngFor="let day of displayList" class="meal-plan">
+    <div class="meal-plan--headline">
+        <h3 class="date-hr">{{ day.date }}</h3>
+        <h3>{{ day.dayName }}</h3>
+    </div>
+
+    <div class="meal-plan--container">
+        <!-- Lunch -->
+        <div *ngIf="day?.lunch">
+            {{ day.lunch?.name }}
+        </div>
+
+        <!-- No lunch planned yet -->
+        <div *ngIf="!day?.lunch" class="planner--meals-none" (click)="addMeal()">
+            <mat-icon>add</mat-icon>
+        </div>
+
+        <!-- Dinner -->
+        <div *ngIf="day?.dinner">
+            {{ day.dinner?.name }}
+        </div> 
+
+        <!-- No dinner planned yet -->
+        <div *ngIf="!day?.dinner" class="planner--meals-none" (click)="addMeal()">
+            <mat-icon>add</mat-icon>
+        </div>
+    </div>
+</div>

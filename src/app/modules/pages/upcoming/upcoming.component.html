@@ -1,0 +1,98 @@
+<div class="upcoming">
+    <!-- Search & back to planner -->
+    <div class="upcoming--headline">
+        <div class="upcoming--headline-search">
+            <input type="text" placeholder="Suche" [(ngModel)]="searchText" (ngModelChange)="searchNotifier.next()">
+            <mat-icon *ngIf="searchText.trim().length" (click)="resetSearch()">clear</mat-icon>
+        </div>
+        
+        <button (click)="navigateToPlanner()">
+            <mat-icon>calendar_view_day</mat-icon>
+        </button>
+    </div>
+
+    <!-- Date filters -->
+    <div class="upcoming--filters">
+        <div class="app-filter" *ngFor="let filter of dateFilter" (click)="filterDateInterval(filter.value)" [class.selected]="filter.value === selectedFilter">
+            {{filter.display}}
+        </div>
+    </div>
+
+    <!-- Type filters -->
+    <div class="upcoming--filters">
+        <div class="app-filter" (click)="filterType(entryTypeEnum.Todo)" [class.selected]="selectedEntryType === entryTypeEnum.Todo">Aufgabe</div>
+        <div class="app-filter" (click)="filterType(entryTypeEnum.Appointment)" [class.selected]="selectedEntryType === entryTypeEnum.Appointment">Termin</div>
+    </div>
+
+    <div class="upcoming--tabs">
+        <mat-tab-group (selectedTabChange)="filterAssignment($event.index)" animationDuration="0ms">
+            <mat-tab label="Alle"><ng-container [ngTemplateOutlet]="list"></ng-container></mat-tab>
+            <mat-tab>
+                <ng-template mat-tab-label>
+                    <mat-icon class="example-tab-icon">person</mat-icon>
+                </ng-template>
+                <ng-container [ngTemplateOutlet]="list"></ng-container>
+            </mat-tab>
+            <mat-tab>
+                <ng-template mat-tab-label>
+                    <mat-icon class="example-tab-icon">people</mat-icon>
+                </ng-template>
+                <ng-container [ngTemplateOutlet]="list"></ng-container>
+            </mat-tab>
+            <mat-tab>    
+                <ng-template mat-tab-label>
+                    <mat-icon class="example-tab-icon">menu_book</mat-icon>
+                </ng-template>
+                <ng-container [ngTemplateOutlet]="mealPlans"></ng-container>
+            </mat-tab>
+        </mat-tab-group>
+
+        <div class="upcoming--tabs-menu" *ngIf="tabIndex !== 3">
+            <mat-icon *ngIf="showMultiActionBar" (click)="closeMultiSelection()">clear</mat-icon>
+            <mat-icon [matMenuTriggerFor]="menu" *ngIf="!showMultiActionBar" [class.app-disabled]="!listDisplay?.length">more_vert</mat-icon>
+            <mat-menu #menu="matMenu">
+                <button mat-menu-item (click)="openMultiSelection()">Mehrere Elemente auswählen</button>
+            </mat-menu>    
+        </div>
+
+        <div *ngIf="tabIndex === 3" class="upcoming--tabs-menu app-disabled">
+            <mat-icon>more_vert</mat-icon>
+        </div>
+    </div>
+
+    <ng-template #list>
+        <div class="upcoming--tabs-content" *ngIf="tabIndex !== 3 && listDisplay?.length">            
+            <!-- List -->
+            <div class="upcoming--list" *ngFor="let item of listDisplay">
+                <app-list #lists [list]="item.value" [headline]="item.name" [headlineDayName]="item.dayName" [externMultiAction]="true"
+                          (openItem)="openEditor($event)" (swipedItem)="deleteEntry($event)"  (checkedItem)="markTodo($event)" (changedOrder)="changeTodosOrder($event)"
+                >
+                </app-list>
+            </div>
+        </div>
+        <div class="upcoming--tabs-content--none" *ngIf="tabIndex !== 3 && !listDisplay?.length">
+            Keine Pläne.
+        </div>
+    </ng-template>
+
+    <ng-template #mealPlans>
+        <div class="upcoming--tabs-content" *ngIf="tabIndex === 3">            
+            <!-- List -->
+            <div class="upcoming--list" *ngIf="mealPlan?.length">
+                <app-list-meal-plan [list]="mealPlan"></app-list-meal-plan>
+            </div>
+
+            <div class="upcoming--tabs-content--none" *ngIf="!mealPlan?.length">
+                Keine Pläne.
+            </div>
+        </div>
+    </ng-template>
+ 
+    <!-- Add appointment / todo -->
+    <ng-container *ngIf="tabIndex !== 3">
+        <app-editor-bottom [(show)]="showEditor" (submitEntry)="submitEntry($event)" [date]="selectedDate" [showCollabIcon]="tabIndex !== 2"></app-editor-bottom>
+    </ng-container>
+
+    <!-- Multiaction -->
+    <app-editor-multiaction *ngIf="showMultiActionBar" (multiaction)="onMultiaction($event)"></app-editor-multiaction>
+</div>

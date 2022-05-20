@@ -1,0 +1,99 @@
+<div class="planner-category" *ngIf="displayList?.length" #listContainer cdkDropList  (cdkDropListDropped)="dropListItem($event)" [cdkDropListDisabled]="!sort">
+    <div class="planner-category--headline">
+        <!-- Headline -->
+        <div class="planner-category--headline-container">
+            <h3 [class.date-hr]="headlineDayName">{{ headlineDisplay }}</h3>
+            <h3>{{ headlineDayName }}</h3>
+        </div> 
+        
+        <!-- Headline icons -->
+        <div class="planner-category--headline">
+            <!-- Close multiselection -->
+            <mat-icon *ngIf="showMultiSelection && !externMultiAction" (click)="closeMultiSelection()">clear</mat-icon>
+            
+            <ng-container *ngIf="!showMultiSelection">
+                <!-- Show / hide unnecessary list items -->
+                <ng-container *ngIf="localStorageListName">
+                    <mat-icon *ngIf="showAll" (click)="setShowAll()" [class.show-todos-disabled]="showAllDisabled">unfold_less</mat-icon>
+                    <mat-icon *ngIf="!showAll" (click)="setShowAll()">unfold_more</mat-icon>
+                </ng-container>
+
+                <!-- More actions (multiselection) -->
+                <mat-icon [matMenuTriggerFor]="menu" *ngIf="!externMultiAction">more_vert</mat-icon>
+                <mat-menu #menu="matMenu">
+                    <button mat-menu-item (click)="openMultiSelection()">{{ headline }} auswählen</button>
+                </mat-menu>
+            </ng-container>
+        </div>
+    </div>
+    
+    <!-- List  -->
+    <ng-container *ngFor="let item of displayList; let i = index">
+        <ng-container [ngSwitch]="listType ? listType : item.type">
+            <div cdkDrag cdkDragLockAxis="y" [cdkDragStartDelay]="200" (click)="elementClicked($event, i)">
+                <!-- List item -->
+                <ng-container *ngSwitchCase="entryType.Todo" [ngTemplateOutlet]="checklist" [ngTemplateOutletContext]="{item: item}"></ng-container>
+                <ng-container *ngSwitchCase="entryType.Appointment" [ngTemplateOutlet]="appointment" [ngTemplateOutletContext]="{item: item}"></ng-container>
+                <ng-container *ngSwitchDefault [ngTemplateOutlet]="defaultTemplate" [ngTemplateOutletContext]="{item: item}"></ng-container>
+            </div>
+                <!-- (panmove)="showSwipeAction($event, i)" (panend)="swipeAction($event, i)" -->
+                <!-- Delete action -->
+                <!-- <div class="planner-category--element-action" *ngIf="panWidth > 0 && selectedEntryIndex === i" [style.width.px]="selectedEntryIndex === i ? panWidth : 0">Löschen</div> -->
+
+        </ng-container>
+    </ng-container>
+</div>
+
+<!-- Templates for items depending on list type -->
+
+<!-- Checklist -->
+<ng-template #checklist let-item="item">
+    <div *ngIf="!item?.done || (item?.done && showAll) || !listType"   
+         class="app-simple-card planner-category--element"              
+         [class.past]="item?.past"
+         [class.planner-category--element-selected]="item.selected" 
+    >
+        <div>
+            <!-- Checkbox -->
+            <div class="planner-category--element-checkbox" #checkbox>
+                <input type="checkbox" [id]="item.id" [checked]="item.done"/>
+                <label [for]="item.id"></label>
+            </div>
+            
+            <!-- Todo -->
+            <span [class.done]="item.done">{{ item.name }}</span>
+        </div>
+        
+        <!-- TODO: Template for time & people-->
+        <div class="planner-category--element-icons">
+            <mat-icon *ngIf="!item.user_id">people</mat-icon>
+            <!-- Time of todo (optional)-->
+            <span class="time" [class.done]="item.done">{{ item?.time }}</span>
+        </div>
+    </div>
+</ng-template>
+
+<!-- Appointment list -->
+<ng-template #appointment let-item="item">
+    <div *ngIf="!item?.past || (item?.past && showAll)"   
+         class="app-simple-card planner-category--element"              
+         [class.past]="item?.past"
+         [class.planner-category--element-selected]="item.selected" 
+    >
+
+        <div class="planner-category--element-action-icons">
+            <mat-icon>event</mat-icon>
+            <span>{{ item.name }}</span>
+        </div>
+
+        <!-- TODO: Template for time & people -->
+        <div class="planner-category--element-icons">
+            <mat-icon *ngIf="!item.user_id">people</mat-icon>
+            <!-- Time of todo (optional)-->
+            <span class="time" [class.done]="item.done">{{ item?.time }}</span>
+        </div>
+    </div>
+</ng-template>
+
+<!-- Multi action toolbar -->
+<app-editor-multiaction *ngIf="showMultiSelection && !externMultiAction" [disabled]="!multiSelectionList.length" (multiaction)="onMultiaction($event)"></app-editor-multiaction>

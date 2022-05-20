@@ -1,0 +1,11 @@
+<!-- Content -->
+<router-outlet></router-outlet>
+
+<!-- Toolbar -->
+<mat-toolbar *ngIf="router.url !== '/'">
+    <mat-icon routerLink="/home" routerLinkActive="active">apartment</mat-icon>
+    <mat-icon routerLink="/recipes" routerLinkActive="active">restaurant</mat-icon>
+    <mat-icon routerLink="/planner" routerLinkActive="active">calendar_today</mat-icon>
+    <mat-icon routerLink="/activities" routerLinkActive="active">directions_walk</mat-icon>
+    <mat-icon routerLink="/pets" routerLinkActive="active">pets</mat-icon>
+</mat-toolbar>

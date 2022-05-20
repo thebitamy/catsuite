@@ -1,0 +1,163 @@
+.planner {
+    &-category {
+        position: relative;
+
+        &:first-child {
+            margin-top: 25px;
+        }
+        
+        &--headline {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+
+            div mat-icon.show-todos-disabled {
+                color: var(--white-transparent);
+            }
+
+            h3.date-hr:after {
+                content: "";
+                position: absolute;
+                border-top: 1px solid var(--white-transparent-shadow);
+                top: 25px;
+                width: 100%;
+                margin-left: 10px;                
+            }
+
+            &-container {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                width: 100%;
+
+                h3 + h3 {
+                    background: var(--primary);
+                    padding-left: 10px;
+                    z-index: 1;
+                    color: var(--white-transparent);
+                    font-weight: 500; 
+                }
+            }
+        }
+
+        &--element {
+            display: flex;
+            justify-content: space-between;
+
+            div {
+                display: flex;
+                align-items: center;
+            }
+
+            &-selected {
+                background: var(--white-transparent);
+            }
+            
+            & + & {
+                margin-top: 10px;
+            }
+
+            &.past {
+                color: var(--white-transparent);
+            }
+
+            &-action {
+                position: absolute;
+                top: 0; 
+                right: 0;
+                bottom: 0;
+                
+                display: flex;
+                align-items: center;
+                
+                box-sizing: border-box;
+                overflow: hidden;
+                width: 0;
+                z-index: 1;
+                
+                background: var(--fourth);
+                padding: 12px;
+                border-radius: 10px;
+
+                &-icons {
+                    mat-icon {
+                        margin-right: 15px;
+                        color: var(--primary);
+                        font-size: 24px;
+                    }
+                }
+            }
+
+            span {
+                &:first-child {
+                    white-space: nowrap;
+                    overflow: hidden;
+                    text-overflow: ellipsis;
+                }
+
+                &.done {
+                    color: var(--white-transparent);
+                    text-decoration: line-through;
+                }
+            }
+
+            &-checkbox {
+                position: relative;
+                margin-right: 20px;
+
+                label {
+                    position: absolute;
+                    top: -2px;
+                    left: 0;
+                    
+                    height: 18px;
+                    width: 18px;
+                    background-color: var(--primary);
+                    border-radius: 50%;
+                    cursor: pointer;
+                    padding: 3px;
+                }
+                      
+                label:after {
+                    position: absolute;
+                    top: 8px;
+                    left: 7px;
+
+                    content: "";
+                    height: 3px;
+                    width: 8px;
+                    transform: rotate(-45deg);
+                    
+                    border: 2px solid var(--white-transparent);
+                    border-top: none;
+                    border-right: none;
+                    opacity: 0;
+                }
+                      
+                input[type="checkbox"] {
+                    visibility: hidden;
+                }
+                
+                input[type="checkbox"]:checked + label {
+                    background-color: var(--primary);
+                }
+                
+                input[type="checkbox"]:checked + label:after {
+                    opacity: 1;
+                }
+            }
+
+            &-icons {
+                mat-icon {
+                    height: 18px;
+                    width: 18px;
+                    font-size: 18px;
+                }
+
+                .time {
+                    margin-left: 10px;
+                }
+            }
+        }
+    }
+}

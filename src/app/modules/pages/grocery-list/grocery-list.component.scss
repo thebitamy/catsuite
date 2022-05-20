@@ -1,0 +1,11 @@
+.grocery {
+    &-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+
+        &--list-name {
+            display: flex;
+        }
+    }
+}

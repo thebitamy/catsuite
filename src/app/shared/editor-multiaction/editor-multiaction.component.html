@@ -1,0 +1,29 @@
+<div class="editor-multiaction">
+    
+    <!-- Multiaction toolbar -->
+    <mat-toolbar [class.disabled]="disabled">
+        <!-- Left action button -->
+        <div *ngIf="!showDatepicker" (click)="multiaction.emit({action: action.Delete})" ><mat-icon>delete</mat-icon></div>
+        <div *ngIf="showDatepicker" (click)="closeDatepicker()"><mat-icon>clear</mat-icon></div>
+
+        <!-- Right action button -->
+        <div class="editor-multiaction--datepicker-input" (click)="openOrEdit()">
+            <mat-icon *ngIf="!showDatepicker">edit_calendar</mat-icon>
+            <mat-icon *ngIf="showDatepicker">send</mat-icon>
+            
+            <!-- Hidden datepicker input (is required but we use custom element to open datepicker) -->
+            <input type="text" matInput [matDatepicker]="datepicker" (dateInput)="multiaction.emit({action: action.UpDate, date: $event.value})">
+        </div>
+    </mat-toolbar>
+
+    <!-- Datepicker -->
+    <mat-datepicker #datepicker [calendarHeaderComponent]="datepickerHeader" startView="month" (opened)="openDatepicker()" (closed)="showDatepicker = false">
+        <mat-datepicker-actions>
+            <!-- Workaround - datepicker should not close when picking a date -->
+            <button mat-raised-button color="primary" matDatepickerApply #applyBtn></button>
+        </mat-datepicker-actions>
+    </mat-datepicker>
+</div>
+
+<!-- Background of datepicker editor -->
+<div class="editor-multiaction--datepicker-container" *ngIf="showDatepicker"></div>

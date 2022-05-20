@@ -1,0 +1,67 @@
+<div class="login">
+    <!-- Logo and app name -->
+    <div class="login--logo">
+        <div class="login--logo--img"></div>
+        <div class="login--logo--text">Catsuite</div>
+    </div>
+
+    <div class="login--form">
+        <!-- Form headline -->
+        <h1>
+            <ng-container *ngIf="view === viewType.Login">Login</ng-container>
+            <ng-container *ngIf="view === viewType.ResetPw">Passwort vergessen</ng-container>
+            <ng-container *ngIf="view === viewType.SignUp">Registrierung</ng-container>
+        </h1>
+
+        <ng-container *ngIf="!actionSuccess">
+            <!-- Login form -->
+            <form [formGroup]="form" (ngSubmit)="submitForm()">
+                <!-- Email input -->
+                <input formControlName="email" type="text" placeholder="E-Mail" [class.alert-error]="submitted && form.invalid">
+                
+                <!-- Password input -->
+                <ng-container *ngIf="view === viewType.Login || view === viewType.SignUp">
+                    <div class="login--form-pw">
+                        <input formControlName="password" [type]="!showPw ? 'password' : 'text'" placeholder="Passwort" [class.alert-error]="submitted && form.invalid">
+                       
+                        <!-- Password input icons -->
+                        <mat-icon class="material-icons-outlined" *ngIf="!showPw" (click)="showPw = !showPw">
+                            visibility
+                        </mat-icon>
+                        
+                        <mat-icon class="material-icons-outlined" *ngIf="showPw" (click)="showPw = !showPw">
+                            visibility_off
+                        </mat-icon>
+                    </div>
+                </ng-container>
+
+                <!-- Repeat password input -->
+                <ng-container *ngIf="view === viewType.SignUp">
+                    <input formControlName="password_confirm" type="password" placeholder="Passwort" [class.alert-error]="submitted && form.invalid">
+                </ng-container>
+
+                <!-- Submit button -->
+                <button type="submit" class="action">
+                    <ng-container *ngIf="view === viewType.Login">Anmelden</ng-container>
+                    <ng-container *ngIf="view === viewType.ResetPw">Zurücksetzen</ng-container>
+                    <ng-container *ngIf="view === viewType.SignUp">Absenden</ng-container>
+                </button>
+
+                <!-- Footer  -->
+                <div class="login--footer" [class.two]="view === viewType.Login">
+                    <span *ngIf="view === viewType.Login" (click)="changeForm(viewType.ResetPw)">Passwort vergessen</span>
+                    <span *ngIf="view === viewType.Login" (click)="changeForm(viewType.SignUp)">Kein Account? Registrieren.</span> 
+                    <span *ngIf="view === viewType.SignUp || view === viewType.ResetPw" (click)="changeForm(viewType.Login)">Anmelden</span> 
+                </div>
+            </form>
+        </ng-container>
+
+        <!-- Success notification -->
+        <div class="login--success-action" *ngIf="actionSuccess">
+            <div *ngIf="view === viewType.SignUp">Du erhälst in Kürze eine Bestätigungsmail. Bitte klicke den in dieser E-Mail enthaltenen Bestätigungslink, um deine Registrierung erfolgreich abzuschließen.</div>
+            <div *ngIf="view === viewType.ResetPw">Du erhälst in Kürze eine E-Mail mit einem Link zum Zurücksetzen deines Passwortes.</div>
+            <button class="action" (click)="resetAndBackToLogin()">Zurück zum Login</button>
+        </div>
+    </div>  
+</div>
+

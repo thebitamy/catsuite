@@ -1,0 +1,24 @@
+<div class="custom-header">
+    <!-- Back icon -->
+    <span (click)="yearView()" *ngIf="headerLabel.currentView === customHeader.MONTH">
+        <mat-icon class="custom-header--icon">arrow_back</mat-icon>
+    </span>
+    <span (click)="yearView()" class="custom-header--icon" *ngIf="headerLabel.currentView === customHeader.MONTH"></span>
+
+    <!-- Previous month / year -->
+    <span (click)="previousClicked()" *ngIf="!(headerLabel.currentView === customHeader.MULTI_YEAR)" class="previous">
+        <mat-icon>chevron_left</mat-icon>
+    </span>
+
+    <!-- Header label -->
+    <span class="custom-header--label" (click)="toggleYearView()">
+        <span>{{ headerLabel.display }}</span>
+        <mat-icon class="custom-header--icon" *ngIf="headerLabel.currentView === customHeader.MULTI_YEAR">keyboard_arrow_down</mat-icon>
+        <mat-icon class="custom-header--icon" *ngIf="headerLabel.currentView === customHeader.YEAR">chevron_left</mat-icon>
+    </span>
+
+    <!-- Next month / year -->
+    <span (click)="nextClicked()" *ngIf="!(headerLabel.currentView === customHeader.MULTI_YEAR)" class="next">
+        <mat-icon>keyboard_arrow_right</mat-icon>
+    </span>
+</div>
